@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class shoot : MonoBehaviour
 {
-    public GameObject bullet;
+    public GameObject bullet,ShootByTag;
     public float shootSpeed=1000f;
     public GameObject Senserdir;
     private GameObject hitBullet;
     private Vector3 direction;
     private Rigidbody rb;
     bool once;
-    int a;
-
+   
     void Update()
     {
         RaycastHit hit;
@@ -22,6 +21,7 @@ public class shoot : MonoBehaviour
         {
             if (hit.collider.gameObject.CompareTag("enemy") && !once )
             {
+                ShootByTag = hit.collider.gameObject;
                 Shoot();
                 Debug.Log("Shoot");
                 once = true;
@@ -38,13 +38,11 @@ public class shoot : MonoBehaviour
     {
         hitBullet =  Instantiate(bullet,transform.position,transform.rotation);
         rb = hitBullet.GetComponent<Rigidbody>();
-        direction = (BuildingAltitudePicking.instance.enemy[a].transform.position - transform.position);
+        direction = (ShootByTag.transform.position - transform.position);
         //BuildingAltitudePicking.instance.enemy[a].SetActive(false);
-        GameObject parent = BuildingAltitudePicking.instance.enemy[a];
+        GameObject parent = ShootByTag;
         Destroy(parent);
-
         rb.AddForce(direction * shootSpeed, ForceMode.Acceleration) ;
-        a++;
     }
 
     void againShoot()
